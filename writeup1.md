@@ -18,6 +18,14 @@ The Boot2Root machine does not present the IP address of the VM on the start dis
 It's still rather easy to gather that piece of information. My Host Machine is running on Windows, I'm using VMWare as my virtualization tool for this project.
 We can simply use `arp -a` or `ipconfig /all` to find the IP address of our b2r machine. If you have trouble to find the machine within your many assigned networks, as I did, you can simply find it with the help of the assigned MAC address that you can find within the VMWare machine settings, it's also similar on VirtualBox.
 
+The explanation above is only valid for `Host-only` Network Adapters. If you have your Attack Machine somewhere else running rather than as a VM on your Host machine, you need to switch your Network connection to `Bridged` to be able to access the Target VM b2r. Finding the IP Address of the Target VM with `ipconfig` or `arp`, was at least not possible for me through the MAC Address with Virtual Box or VMware. If you choose the `Bridged` connection, the VM will be directly connected to the physical network, in my case an Intel Killer Wireless Adapter. You will be able to find the Adapters IP address via `ipconfig` or `arp`.
+Scan the Adapters IP Range with nmap for example:
+
+```
+nmap 192.100.0.0-255
+```
+Nmap will find the open ports to the corresponding IP Address of the b2r Target VM.
+
 ## Enumeration
 
 As always, let's start the Enumeration with Nmap and the following command:
