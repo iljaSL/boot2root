@@ -8,6 +8,7 @@
   - [Finding the IP Address](#finding-the-ip-address)
   - [Enumeration](#enumeration)
 
+
 ## Introduction
 
 This Hive Helsinki Project is about finding ways to gain root access on the boot2root virtual machine. Check the subject [file](https:linkmissing) for more information.
@@ -41,7 +42,7 @@ PORT    STATE  SERVICE  VERSION
 21/tcp  open   ftp      vsftpd 2.0.8 or later
 |_ftp-anon: got code 500 "OOPS: vsftpd: refusing to run with writable root inside chroot()".
 22/tcp  open   ssh      OpenSSH 5.9p1 Debian 5ubuntu1.7 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
+| ssh-hostkey:
 |   1024 07:bf:02:20:f0:8a:c8:48:1e:fc:41:ae:a4:46:fa:25 (DSA)
 |   2048 26:dd:80:a3:df:c4:4b:53:1e:53:42:46:ef:6e:30:b2 (RSA)
 |_  256 cf:c3:8c:31:d7:47:7c:84:e2:d2:16:31:b2:8e:63:a7 (ECDSA)
@@ -69,3 +70,32 @@ PORT    STATE  SERVICE  VERSION
 | Not valid before: 2015-10-08T20:57:30
 |_Not valid after:  2025-10-07T20:57:30
 ```
+
+The most interesting part of the Nmap enumeration are the ports 80 and 443, which indicates that b2r is hosting a website. A quick check with the browser, and indeed a Website with a straightforward instruction is being displayed.
+
+TODO: Insert Image http_landing_page here
+
+This discovery looks like the most promising lead in order to gain root access on the server and will be the first attempt on the list of gaining it.
+
+The Enumeration is not over yet though. Let's dig in a bit deeper and find hidden web content with Gobuster.
+
+Port 80 (http):
+```
+gobuster dir -u http://<IP> -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x .php
+
+/forum                (Status: 403) [Size: 285]
+/fonts                (Status: 301) [Size: 312]
+/server-status        (Status: 403) [Size: 293]
+```
+Port 443 (https):
+```
+gobuster dir -k -u https://<IP> -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x .php
+
+/forum                (Status: 301) [Size: 314]
+/webmail              (Status: 301) [Size: 316]
+/phpmyadmin           (Status: 301) [Size: 319]
+/server-status        (Status: 403) [Size: 294]
+```
+`-k (Skip TLS certificate verification)`
+
+That result is very promising, especially the fact that phpmyadmin has been deployed to the production web server. Which would give me easy access to the Database and does have an infamous security history. I also now know that MySQL is being used as the Database.
