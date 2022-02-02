@@ -7,6 +7,7 @@
   - [Introduction](#introduction)
   - [Finding the IP Address](#finding-the-ip-address)
   - [Enumeration](#enumeration)
+  - [Gaining Access](#gaining-access)
 
 
 ## Introduction
@@ -99,3 +100,18 @@ gobuster dir -k -u https://<IP> -w /usr/share/wordlists/dirbuster/directory-list
 `-k (Skip TLS certificate verification)`
 
 That result is very promising, especially the fact that phpmyadmin has been deployed to the production web server. Which would give me easy access to the Database and does have an infamous security history. I also now know that MySQL is being used as the Database.
+
+## Gaining Access
+
+The Port 80 results are quite discouraging as they returned the Status 403, meaning the access to that specific web content is forbidden. Port 443 looks much promising though, as most of the content is being redirected. I'm being greeted with a login page for `/webmail` and `/phpmyadmin`, that means that I need to find some credentials in order to access them. The Forum looks already much promising as I don't need to login in order to access it.
+
+TODO: IMAGE FOR FORUM
+
+I am presented with a lot of valuable information on the Forum, the most important one first, I am able to read all the posted forum posts. I see that there are 6 users registered, and the most convenient part is that the users are all neatly listed when I click the `Users` tab. The Forum itself is powered by little forum, that will be definitely helpful for later!
+
+TODO: IMAGE USER AREA
+
+I'm able to email the admin, I tried to test it for a XSS vulnerability, which did not work, refreshing the page also resulted in some weird buggy behaviors, I will for now set it aside and focus on the forum posts instead until I get stuck in which case I could investigate that issue closer.
+The most of the posts are not interesting and do not provide any important information except the post `Probleme login ?` from the user `Imezard`. Imezard is sharing logs of (many) failed SSH login attempts. One login attempt looks really interesting, the username for this attempt was `!q\]Ej?*5K5cy*AJ`, which does look quite like a password.
+
+TODO: IMAGE USER LOGS
