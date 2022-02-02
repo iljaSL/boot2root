@@ -74,7 +74,9 @@ PORT    STATE  SERVICE  VERSION
 
 The most interesting part of the Nmap enumeration are the ports 80 and 443, which indicates that b2r is hosting a website. A quick check with the browser, and indeed a Website with a straightforward instruction is being displayed.
 
-TODO: Insert Image http_landing_page here
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/http_landing_page.png">
+</p>
 
 This discovery looks like the most promising lead in order to gain root access on the server and will be the first attempt on the list of gaining it.
 
@@ -105,13 +107,19 @@ That result is very promising, especially the fact that phpmyadmin has been depl
 
 The Port 80 results are quite discouraging as they returned the Status 403, meaning the access to that specific web content is forbidden. Port 443 looks much promising though, as most of the content is being redirected. I'm being greeted with a login page for `/webmail` and `/phpmyadmin`, that means that I need to find some credentials in order to access them. The Forum looks already much promising as I don't need to login in order to access it.
 
-TODO: IMAGE FOR FORUM
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/forum_landing_page.png">
+</p>
 
 I am presented with a lot of valuable information on the Forum, the most important one first, I am able to read all the posted forum posts. I see that there are 6 users registered, and the most convenient part is that the users are all neatly listed when I click the `Users` tab. The Forum itself is powered by little forum, that will be definitely helpful for later!
 
-TODO: IMAGE USER AREA
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/forum_user_area.png">
+</p>
 
 I'm able to email the admin, I tried to test it for a XSS vulnerability, which did not work, refreshing the page also resulted in some weird buggy behaviors, I will for now set it aside and focus on the forum posts instead until I get stuck in which case I could investigate that issue closer.
 The most of the posts are not interesting and do not provide any important information except the post `Probleme login ?` from the user `Imezard`. Imezard is sharing logs of (many) failed SSH login attempts. One login attempt looks really interesting, the username for this attempt was `!q\]Ej?*5K5cy*AJ`, which does look quite like a password.
 
-TODO: IMAGE USER LOGS
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/user_logs_with_pw.png">
+</p>
