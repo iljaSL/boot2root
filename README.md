@@ -134,14 +134,20 @@ It did not work with SquirrelMail, as the username probably need to be a valid e
 BUT it worked indeed with the Forum. I have now access to lmezard's forum account.
 There is nothing really interesting to find, except lmezard's email `laurie@borntosec.net`, which I think could help with the SquirrelMail login attempt.
 
-TODO: IMAGE FORUM USER PROFILE
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/forum_user_profile.png">
+</p>
 
 The login attempt to SquirrelMail with lmezard's and password worked as well, no surprise there.
 Of course, this is just a school Project, but nevertheless many users are reusing their passwords for different accounts and this chain of account takeovers is quite common in the real world, so if anyone out there is reading this random as CTF write-up, PLEASE USE A PASSWORD MANAGER!
 Back to SquirrelMail and lmezard's inbox. There are only 2 mails in the inbox, and the one titled `DB Access` is really interesting, as it contains the root credentials for a Database.
 
-TODO: DB ACCESS EMAIL
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/db_access_email.png">
+</p>
 
 We gained access to phpmyadmin and the Forum Database.
 
-TODO: FORUM DB
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/forum_db.png">
+</p>
