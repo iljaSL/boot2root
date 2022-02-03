@@ -1,5 +1,4 @@
 # boot2root
-This Hive Helsinki Project is about finding ways to gain root access on the boot2root virtual machine.
 
 ## Table of content
 
@@ -14,7 +13,7 @@ This Hive Helsinki Project is about finding ways to gain root access on the boot
 
 ## Introduction
 
-This Hive Helsinki Project is about finding ways to gain root access on the boot2root virtual machine. Check the subject [file](https:linkmissing) for more information.
+This Hive Helsinki Project is about finding ways to gain root access on the boot2root virtual machine. Check the [subject file](https://github.com/iljaSL/boot2root/blob/main/en.subject.pdf) for more information.
 
 ## Finding the IP Address
 
