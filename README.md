@@ -122,8 +122,27 @@ I am presented with a lot of valuable information on the Forum, the most importa
 </p>
 
 I'm able to email the admin, I tried to test it for a XSS vulnerability, which did not work, refreshing the page also resulted in some weird buggy behaviors, I will for now set it aside and focus on the forum posts instead until I get stuck in which case I could investigate that issue closer.
-The most of the posts are not interesting and do not provide any important information except the post `Probleme login ?` from the user `Imezard`. Imezard is sharing logs of (many) failed SSH login attempts. One login attempt looks really interesting, the username for this attempt was `!q\]Ej?*5K5cy*AJ`, which does look quite like a password.
+The most of the posts are not interesting and do not provide any important information except the post `Probleme login ?` from the user `lmezard`. lmezard is sharing logs of (many) failed SSH login attempts. One login attempt looks really interesting, the username for this attempt was `!q\]Ej?*5K5cy*AJ`, which does look quite like a password.
 
 <p align="center">
   <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/user_logs_with_pw.png">
 </p>
+
+I tried (just in case) to use SSH to gain access to the Server with lmezard Credentials, but that did not work.
+What should users definitely don't do with their passwords, but still do on every registration?
+Correct, reusing their passwords. So I tried to reuse lmezard's credentials on the services that we have access to.
+It did not work with SquirrelMail, as the username probably need to be a valid email.
+BUT it worked indeed with the Forum. I have now access to lmezard's forum account.
+There is nothing really interesting to find, except lmezard's email `laurie@borntosec.net`, which I think could help with the SquirrelMail login attempt.
+
+TODO: IMAGE FORUM USER PROFILE
+
+The login attempt to SquirrelMail with lmezard's and password worked as well, no surprise there.
+Of course, this is just a school Project, but nevertheless many users are reusing their passwords for different accounts and this chain of account takeovers is quite common in the real world, so if anyone out there is reading this random as CTF write-up, PLEASE USE A PASSWORD MANAGER!
+Back to SquirrelMail and lmezard's inbox. There are only 2 mails in the inbox, and the one titled `DB Access` is really interesting, as it contains the root credentials for a Database.
+
+TODO: DB ACCESS EMAIL
+
+We gained access to phpmyadmin and the Forum Database.
+
+TODO: FORUM DB
