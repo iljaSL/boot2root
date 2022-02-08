@@ -172,3 +172,25 @@ Okay, let's check if we can execute any shell commands with the following crafte
 ```
 https://<IP>/forum/templates_c/backdoor.php?cmd=whoami
 ```
+It worked! We got the following response (I'm using BurpSuite's Repeater for the upcoming requests):
+
+TODO: CMD_WHOAMI IMAGE
+
+Let's see if we can get access to some more interesting information with:
+```
+https://<IP>/forum/templates_c/backdoor.php?cmd=cat%20/etc/passwd
+```
+TODO: CMD_ETC_PASSWD IMAGE
+
+Now we do have a much better picture on boot2roots users.
+After a bit of traversing through the server's directories, I discovered an interesting dir called `LOOKATME`, which also does have the right permission to access it.
+
+TODO: CMD_LOOKATME
+
+The directory does include an even better file to look at, which is called `password` with the following data:
+```
+lmezard:G!@M6f4Eatau{sF"
+```
+So far so good, now I have to figure out for which exact service this credentials are used for.
+Unfortunately those credentials do not work with SSH, but we also have a FTP Service running that we discovered during our enumeration with Nmap, and those credentials to work indeed with FTP!
+We have access to two files while logged in wit lmezard, `README` and `fun`. Let's get them with ftp `get` command at check out what's inside.
