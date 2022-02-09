@@ -174,18 +174,24 @@ https://<IP>/forum/templates_c/backdoor.php?cmd=whoami
 ```
 It worked! We got the following response (I'm using BurpSuite's Repeater for the upcoming requests):
 
-TODO: CMD_WHOAMI IMAGE
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cmd_whoami.png">
+</p>
 
 Let's see if we can get access to some more interesting information with:
 ```
 https://<IP>/forum/templates_c/backdoor.php?cmd=cat%20/etc/passwd
 ```
-TODO: CMD_ETC_PASSWD IMAGE
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cmd_etc_passwd.png">
+</p>
 
 Now we do have a much better picture on boot2roots users.
 After a bit of traversing through the server's directories, I discovered an interesting dir called `LOOKATME`, which also does have the right permission to access it.
 
-TODO: CMD_LOOKATME
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cmd_lookatme.png">
+</p>
 
 The directory does include an even better file to look at, which is called `password` with the following data:
 ```
