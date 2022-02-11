@@ -250,7 +250,7 @@ int main() {
 }
 ```
 That is C syntax, you can find those 12 `getme` function within the files and also what character they return, but the problem is that the return statements are sometimes all over the place, so it's quite hard to figure out the password by just analyzing it manually.
-So I decided to use this [script](LINK) to convert all those files into a C file,
+So I decided to use this [script](https://github.com/iljaSL/boot2root/blob/main/scripts/ascii_to_c.py) to convert all those files into a C file,
 which can be compiled and executed in order to get the following result:
 ```
 MY PASSWORD IS: Iheartpwnage
