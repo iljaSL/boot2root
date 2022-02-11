@@ -210,5 +210,55 @@ Fun is actually a ZIP which contains a dir called `ft_fun` with lots of `.pcap` 
 Checking the type of the files with the `file` command results in a really interesting find.
 Those files are ASCII text files and taking a closer look reveals the following output in one of those files:
 ```
-//file363       printf("Hahahaha Got you!!!\n");
+void useless() {
+	printf("Hahahaha Got you!!!\n");
 ```
+Analyzing the files more closely, a instruction message can found:
+
+```
+int main() {
+	printf("M");
+	printf("Y");
+	printf(" ");
+	printf("P");
+	printf("A");
+	printf("S");
+	printf("S");
+	printf("W");
+	printf("O");
+	printf("R");
+	printf("D");
+	printf(" ");
+	printf("I");
+	printf("S");
+	printf(":");
+	printf(" ");
+	printf("%c",getme1());
+	printf("%c",getme2());
+	printf("%c",getme3());
+	printf("%c",getme4());
+	printf("%c",getme5());
+	printf("%c",getme6());
+	printf("%c",getme7());
+	printf("%c",getme8());
+	printf("%c",getme9());
+	printf("%c",getme10());
+	printf("%c",getme11());
+	printf("%c",getme12());
+	printf("\n");
+	printf("Now SHA-256 it and submit");
+}
+```
+That is C syntax, you can find those 12 `getme` function within the files and also what character they return, but the problem is that the return statements are sometimes all over the place, so it's quite hard to figure out the password by just analyzing it manually.
+So I decided to use this [script](LINK) to convert all those files into a C file,
+which can be compiled and executed in order to get the following result:
+```
+MY PASSWORD IS: Iheartpwnage
+Now SHA-256 it and submit
+```
+Lets `SHA-256` it:
+```
+echo -n "Iheartpwnage" | sha256sum
+330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
+```
+And that is the password! We can now SSH into B2R as `laurie`.
