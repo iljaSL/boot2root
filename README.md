@@ -3,12 +3,12 @@
 ## Table of content
 
 - [boot2root](#boot2root)
-  - [Table of content](#table-of-content)
-  - [Introduction](#introduction)
-  - [Finding the IP Address](#finding-the-ip-address)
-  - [Enumeration](#enumeration)
-  - [Gaining Access](#gaining-access)
-    - [Writeup 1](#writeup-1)
+	- [Table of content](#table-of-content)
+	- [Introduction](#introduction)
+	- [Finding the IP Address](#finding-the-ip-address)
+	- [Enumeration](#enumeration)
+	- [Gaining Access](#gaining-access)
+		- [Writeup 1](#writeup-1)
 
 
 ## Introduction
@@ -197,8 +197,8 @@ The directory does include an even better file to look at, which is called `pass
 ```
 lmezard:G!@M6f4Eatau{sF"
 ```
-So far so good, now I have to figure out for which exact service this credentials are used for.
-Unfortunately those credentials do not work with SSH, but we also have a FTP Service running that we discovered during our enumeration with Nmap, and those credentials to work indeed with FTP!
+So far so good, now I have to figure out for which exact service these credentials are used for.
+Unfortunately those credentials do not work with SSH, but we also have an FTP Service running that we discovered during our enumeration with Nmap, and those credentials to work indeed with FTP!
 We have access to two files while logged in with lmezard, `README` and `fun`. Let's get them with the ftp `get` command and check out what's inside.
 
 README:
@@ -206,14 +206,14 @@ README:
 Complete this little challenge and use the result as password for user 'laurie' to login in ssh
 ```
 That's a clear message that we got from the README on what to do next.
-Fun is actually a ZIP which contains a dir called `ft_fun` with lots of `.pcap` files, actually exact 750 files. PCAP files contain packet data of a network, which can be usually opened with application like Wireshark, but I get an error when trying to open those files with Wireshark, as it does can not read those files which is really odd.
+Fun is actually a ZIP which contains a directory called `ft_fun` with lots of `.pcap` files, actually exact 750 files. PCAP files contain packet data of a network, which can be usually opened with application like Wireshark, but I get an error when trying to open those files with Wireshark, as it does can not read those files, which is really odd.
 Checking the type of the files with the `file` command results in a really interesting find.
-Those files are ASCII text files and taking a closer look reveals the following output in one of those files:
+Those files are ASCII text files, and taking a closer look reveals the following output in one of those files:
 ```
 void useless() {
 	printf("Hahahaha Got you!!!\n");
 ```
-Analyzing the files more closely, a instruction message can found:
+Analyzing the files more closely, an instruction message can be found:
 
 ```
 int main() {
