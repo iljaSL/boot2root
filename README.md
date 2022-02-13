@@ -262,3 +262,5 @@ echo -n "Iheartpwnage" | sha256sum
 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
 ```
 And that is the password! We can now SSH into B2R as `laurie`.
+
+A test commit.
