@@ -263,4 +263,29 @@ echo -n "Iheartpwnage" | sha256sum
 ```
 And that is the password! We can now SSH into B2R as `laurie`.
 
-A test commit.
+Now we are presented with 2 files inside laurie's home directory, `bomb` and `README`.
+The `README` says:
+```
+Diffuse this bomb!
+When you have all the password use it as "thor" user with ssh.
+
+HINT:
+P
+ 2
+ b
+
+o
+4
+
+NO SPACE IN THE PASSWORD (password is case sensitive).
+```
+`bomb` is a C executable which prints out the following after executing it:
+```
+Welcome this is my little bomb !!!! You have 6 stages with
+only one life good luck !! Have a nice day!
+```
+Inputting a wrong input results in:
+```
+BOOM!!!
+The bomb has blown up.
+```
