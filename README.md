@@ -298,4 +298,6 @@ Public speaking is very easy.
 ```
 This Cutter Graph visualizes the comperesment very good, and which string is being compared with.
 
-TODO: IMG cutter re phase 1
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_1.png">
+</p>
