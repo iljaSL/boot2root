@@ -289,3 +289,13 @@ Inputting a wrong input results in:
 BOOM!!!
 The bomb has blown up.
 ```
+
+The obvious thing is to reverse engineer the binary file that we got. I will use the open source tool Cutter, as my gdb skills are a bit rusty.
+
+The firs phase is pretty easy, the string that we are looking for is:
+```
+Public speaking is very easy.
+```
+This Cutter Graph visualizes the comperesment very good, and which string is being compared with.
+
+TODO: IMG cutter re phase 1
