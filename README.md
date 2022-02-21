@@ -301,3 +301,13 @@ This Cutter Graph visualizes the comperesment very good, and which string is bei
 <p align="center">
   <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_1.png">
 </p>
+
+Phase 2 is also rather straight forward with Cutter's Decompiler feature.
+
+TODO: IMAGE PHASE 2
+
+In order to satisfy the condition, the following 6 numbers are required according to the Program's flow:
+
+```
+1 2 6 24 120 720
+```
