@@ -304,7 +304,10 @@ This Cutter Graph visualizes the comperesment very good, and which string is bei
 
 Phase 2 is also rather straight forward with Cutter's Decompiler feature.
 
-TODO: IMAGE PHASE 2
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_2.png">
+</p>
+
 
 In order to satisfy the condition, the following 6 numbers are required according to the Program's flow:
 
