@@ -318,7 +318,9 @@ In order to satisfy the condition, the following 6 numbers are required accordin
 And again, the third phase is also rather easy with Cutter's Decompiler.
 We encounter a switch statement within the `phase_3` function that expects a `%d %c %d` pattern, with many possible right answers.
 
-TODO: IMAGE cutter phase 3
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_3.png">
+</p>
 
 The first decimal is the case number starting from 0, the character is the hex assigned to `bl` variable before the if conditions, which needs to be converted to a unicode, and the last decimal is the hex within the if condition. The answers are:
 
@@ -331,7 +333,9 @@ The first decimal is the case number starting from 0, the character is the hex a
 Alright, we are halfway there!
 The `phase_4` function calls a `func4` function which is performing a recursive operation.
 
-TODO: IMAGE cutter phase 4
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_4.png">
+</p>
 
 There is a condition inside the `phase_4` function:
 ```
