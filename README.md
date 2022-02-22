@@ -314,3 +314,32 @@ In order to satisfy the condition, the following 6 numbers are required accordin
 ```
 1 2 6 24 120 720
 ```
+
+And again, the third phase is also rather easy with Cutter's Decompiler.
+We encounter a switch statement within the `phase_3` function that expects a `%d %c %d` pattern, with many possible right answers.
+
+TODO: IMAGE cutter phase 3
+
+The first decimal is the case number starting from 0, the character is the hex assigned to `bl` variable before the if conditions, which needs to be converted to a unicode, and the last decimal is the hex within the if condition. The answers are:
+
+```
+0 q 777
+1 b 214
+2 b 755
+...
+```
+Alright, we are halfway there!
+The `phase_4` function calls a `func4` function which is performing a recursive operation.
+
+TODO: IMAGE cutter phase 4
+
+There is a condition inside the `phase_4` function:
+```
+ if (eax != 0x37) {      // 0x37 == 55
+        explode_bomb ();
+    }
+```
+
+So now we know that `func4` need to return `55` in order to solve phase 4.
+`func4` is returning the sum of calls, and in order to return 55 we need 9 calls.
+Which is also the right answer and we are able to move to phase 5.
