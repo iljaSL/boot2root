@@ -348,11 +348,13 @@ So now we know that `func4` need to return `55` in order to solve phase 4.
 `func4` is returning the sum of calls, and in order to return 55 we need 9 calls.
 Which is also the right answer and we are able to move to phase 5.
 
-The `phase_5` function expects a string of the length of 6 bytes. We need to work with ASCII table as there is an function that checks if the string `giants` is equal to a int variable `var_8h` in order to pass.
+The `phase_5` function expects a string of the length of 6 bytes. We need to work with a ASCII table as there is an function that checks if the string `giants` is equal to a int variable `var_8h` in order to pass.
 
-TODO: IMG
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_5.png">
+</p>
 
-There is also bit masking involved with the declared string `isrveawhobpnutfg`. As we are iterating through the index of the string, those indexes are important as we are interested in keeping it equal to `giants`:
+There is also bit masking involved with the declared string `isrveawhobpnutfg`. As we are iterating through the index of the string, those index elements are important as we are interested in keeping it equal to `giants`:
 ```
 i[15] = g
 i[0] = i
@@ -361,15 +363,17 @@ i[11] = n
 i[13] = t
 i[1] = s
 ```
-Let's convert those index decimals to Hex and compare to what character there are corresponding within the ASCII table:
+Let's convert the wanted indexes to Hex and compare to what character there are corresponding to within the ASCII table:
 ```
 opekmq
 ```
 Is the answer to Phase 5.
 
-Phase 5 expects 6 integers as an input. It appears that I performs 4 operations on a linked list, there is a `node` declared at the very beginning.
+Phase 6 expects 6 integers as an input. It appears that I performs 4 operations on a linked list, there is a `node` declared at the very beginning.
 
-TODO: IMG phase6
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/cutter_phase_6.png">
+</p>
 
 It appears that it performs a sort of sorting of the linked list. The integers that we are looking for are the individual index of the nodes. After going through the program flow, the answer seems to be:
 ```
