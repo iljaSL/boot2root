@@ -384,3 +384,39 @@ Finally! We are presented with the following prompt!
 ```
 Congratulations! You've defused the bomb!
 ```
+At the very beginning of the bomb puzzle we were presented with the following information within the Readme file:
+```
+NO SPACE IN THE PASSWORD (password is case sensitive).
+```
+So the password would be as follows for the user `thor`:
+```
+Publicspeakingisveryeasy.126241207200q7779opekmq426315
+```
+And I'm ... not in...
+I did not understand why it did not work, I tried the different combination from Phase 4, but I still could not SSH as thor into b2r.
+After a long time of frustrations I checked for some information on the web and discovered that there is apparently an error within the flag. The last three digits `315` need to be swapped to `135`.
+```
+Publicspeakingisveryeasy.126241207200q7779opekmq426315
+```
+That combinations still did not work, so I tried again with different combinations from Phase 4 and finally it worked with the following combination:
+```
+Publicspeakingisveryeasy.126241207201b2149opekmq426135
+```
+Within tho's home directory we are presented again with a `README` file:
+```
+Finish this challenge and use the result as password for 'zaz' user.
+```
+And a file called `turtle` which is an ASCII text file,
+which includes a LOT of repetitive text:
+```
+Tourne gauche de 90 degrees
+Avance 50 spaces
+Avance 1 spaces
+Tourne gauche de 1 degrees
+Avance 1 spaces
+Tourne gauche de 1 degrees
+Avance 1 spaces
+Tourne gauche de 1 degrees
+....
+Can you digest the message? :)
+```
