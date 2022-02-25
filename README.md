@@ -420,3 +420,28 @@ Tourne gauche de 1 degrees
 ....
 Can you digest the message? :)
 ```
+I quickly discovered that there is a python drawing library called [turtle](https://realpython.com/beginners-guide-python-turtle/) which is based on Logo a programming language that involved a turtle that you could move around the screen with just a few commands.
+The french comments made also quick sense as the library inlcude the following methods to interact with:
+```
+>>> t.right(90)
+>>> t.forward(100)
+>>> t.left(90)
+>>> t.backward(100)
+```
+I created a small and rather lazy script for parsing the turtle file and drawing according to the comments. At first I did not really understand what the program was drawing, but after a few repeats I quickly realized that the program was drawing a word:
+```
+SLASH
+```
+This is not the password though, the login attempts for the user `zaz` are failing while using it.
+I double checked the `README` and `turtle` file for any hints or mistakes I could have done and I totally forgot about the last string inside the `turtle` file:
+```
+Can you digest the message? :)
+```
+Let's try first to generate a MD5 hash:
+```
+echo -n 'SLASH' | md5sum
+646da671ca01bb5d84dbb5fb2238dc8e
+```
+
+It worked! I'm able to login as the user `zaz`. Note that the password is case sensitive.
+Again we are presented with a C binary file with the ominous name `exploit_me`, plus a `mail` folder inside zaz's home directory. Let's first focus on the binary file!
