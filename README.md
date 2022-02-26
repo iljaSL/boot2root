@@ -445,3 +445,20 @@ echo -n 'SLASH' | md5sum
 
 It worked! I'm able to login as the user `zaz`. Note that the password is case sensitive.
 Again we are presented with a C binary file with the ominous name `exploit_me`, plus a `mail` folder inside zaz's home directory. Let's first focus on the binary file!
+
+A closer look with Cutter and executing the binary file reveals that this program is not doing much. It expects one argument, copies it and returns it.
+
+TODO: IMG reversed bin
+
+The most interesting part of this function is that the library function `strcpy`is being used without checking the length of what is being copied into buffer. Suggesting that this program is vulnerable to an buffer overflow exploit. Which is also stated inside the man:
+```
+If the destination string of a strcpy() is not large enough, then
+anything might happen.  Overflowing fixed-length string buffers
+is a favorite cracker technique for taking complete control of
+the machine.  Any time a program reads or copies data into a
+buffer, the program first needs to check that there's enough
+space.
+```
+And we can confirm it with a simple test:
+
+TODO: IMG segfault
