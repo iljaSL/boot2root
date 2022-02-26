@@ -448,7 +448,9 @@ Again we are presented with a C binary file with the ominous name `exploit_me`, 
 
 A closer look with Cutter and executing the binary file reveals that this program is not doing much. It expects one argument, copies it and returns it.
 
-TODO: IMG reversed bin
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/exploit_me_reversed.png">
+</p>
 
 The most interesting part of this function is that the library function `strcpy`is being used without checking the length of what is being copied into buffer. Suggesting that this program is vulnerable to an buffer overflow exploit. Which is also stated inside the man:
 ```
@@ -461,4 +463,6 @@ space.
 ```
 And we can confirm it with a simple test:
 
-TODO: IMG segfault
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/segfault.png">
+</p>
