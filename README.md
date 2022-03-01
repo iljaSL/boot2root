@@ -484,6 +484,10 @@ The size of the buffer is 140 bytes. Meaning that if we exceeded those 140 bytes
 
 What we basically are doing is creating a fake function stack frame. We will overwrite with the payload above the buffer and saved frame pointers with a bunch of `A`.
 
+<p align="center">
+  <img src="https://blog.tallan.com/wp-content/uploads/2019/03/Overflowing-a-buffer-with-injected-code.png">
+</p>
+
 The first thing we need is the address of the system function(first address in the payload).
 Inside gdb, we run the program adn trigger the buffer overflow:
 ```
