@@ -538,15 +538,21 @@ LinPEAS is a script that search for possible paths to escalate privileges on Lin
 ```
 The discovery legend is as follows:
 
-TODO: IMAGE
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup2/linpeas_legend.png">
+</p>
 
 We get straight at the very beginning a `RED/YELLOW` hit under the Linux version which is very promising in escalating privileges.
 
-TODO: IMAGE KERNEL VERSION
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup2/kernel_version.png">
+</p>
 
 A quick check with `searchsploit` reveals that this linux version does have a very serious vulnerability `CVE-2016-5195` aka `Dirty COW`.
 
-TODO: IMAGE SEARCHSPLOIT
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup2/searchsploit.png">
+</p>
 
 Why is it called Dirty COW?
 ```
