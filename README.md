@@ -556,13 +556,23 @@ A quick check with `searchsploit` reveals that this linux version does have a ve
 
 Why is it called Dirty COW?
 ```
-"A race condition was found in the way the Linux kernel's memory subsystem handled the copy-on-write (COW) breakage of private read-only memory mappings. An unprivileged local user could use this flaw to gain write access to otherwise read-only memory mappings and thus increase their privileges on the system."
+"A race condition was found in the way the Linux kernel's memory subsystem 
+handled the copy-on-write (COW) breakage of private read-only memory mappings.
+An unprivileged local user could use this flaw to gain write access to otherwise 
+read-only memory mappings and thus increase their privileges on the system."
 ```
 [Official Source](https://dirtycow.ninja/) <br>
 
 What is a Race Condition Vulnerability?
 ```
-A race condition attack happens when a computing system that’s designed to handle tasks in a specific sequence is forced to perform two or more operations simultaneously. This technique takes advantage of a time gap between the moment a service is initiated and the moment a security control takes effect. This attack, which depends on multithreaded applications, can be delivered in one of two ways: interference caused by untrusted processes (essentially a piece of code that slips into a sequence between steps of a secure programs), and interference caused by a trusted process, which may have the "same'' privileges.
+A race condition attack happens when a computing system that’s designed 
+to handle tasks in a specific sequence is forced to perform two or more operations 
+simultaneously. This technique takes advantage of a time gap between the moment 
+a service is initiated and the moment a security control takes effect. This attack, 
+which depends on multithreaded applications, can be delivered in one of two ways: 
+interference caused by untrusted processes (essentially a piece of code that slips 
+into a sequence between steps of a secure programs), and interference caused 
+by a trusted process, which may have the "same'' privileges.
 ```
 
 I gonna use the POC `dirtycow` script by ["FireFart"](https://github.com/FireFart/dirtycow) for ths exploit.
