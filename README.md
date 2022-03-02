@@ -605,7 +605,7 @@ firefart
 firefart@BornToSecHackMe:/home/thor# id
 uid=0(firefart) gid=0(root) groups=0(root)
 ```
-We do have gained successfully the root access!
+Awesome! We gained successfully the root access!
 
 ### Writeup 3
 
