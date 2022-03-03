@@ -619,6 +619,8 @@ live load init=/bin/sh
 Whe also need to press the `shift` key while booting up b2r in order to enter the recovery mode.
 It will take a bit, but after a few seconds we get successfully the root shell:
 
-TODO: IMAGE BOOT 2 ROOT
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup3/boot_2_root.png">
+</p>
 
 We finally booted boot2root to root! :)
