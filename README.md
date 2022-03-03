@@ -594,3 +594,15 @@ We do have gained successfully the root access!
 ### Writeup 3
 
 The mandatory part is done, now we are going for the bonus points!
+This part is probably the shortest way to get root, because we are able to start the b2r machine in recovery mode. The linux Kernel gives us also commands in order to launch the root shell without providing any credentials, if of course some security measurements have not been done in order to prevent it, which was not the case with b2r! This is actually a feature, and is used for system maintenance in case some initialization got messed-up.
+Here is a link to the really good discussion about this feature and why it's needed: [Link](https://unix.stackexchange.com/questions/34462/why-does-linux-allow-init-bin-bash)
+We are using this command to load the shell:
+```
+live load init=/bin/sh
+```
+Whe also need to press the `shift` key while booting up b2r in order to enter the recovery mode.
+It will take a bit, but after a few seconds we get successfully the root shell:
+
+TODO: IMAGE BOOT 2 ROOT
+
+We finally booted boot2root to root! :)
